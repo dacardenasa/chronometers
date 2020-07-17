@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Container } from "@material-ui/core";
 import { AddChronometerButton } from './AddChronometerButton';
-import { ChronometerMainView, ChronometerCreateView, ChronometerUpdateView } from './views';
+import { ChronometerMainView, ChronometerCreateView, ChronometerUpdateView } from './Views';
 import chronometers from '../chronometers'; 
 const easyTimer = require('easytimer.js').Timer;
 
@@ -29,6 +29,7 @@ export class Chronometer extends Component {
       play: false,
       fill: false,
       edit: false,
+      error: false
     }
     this.setState({
       chronometers: this.state.chronometers.concat(newChronometer)
@@ -37,21 +38,38 @@ export class Chronometer extends Component {
 
   saveChronometer(e, timerId) {
     e.preventDefault();
-    this.setState({
-      chronometers: this.state.chronometers.map( chronometer => {
-        if (chronometer.id === timerId) {
-          chronometer.title = this.titleRef.current.value;
-          chronometer.project = this.projectRef.current.value;
-          chronometer.fill = true;
-          return chronometer;
-        } else {
-          return chronometer;
-        }
-      })
-    });
+    let title = this.titleRef.current.value;
+    let project = this.projectRef.current.value;
+
+    if (title.length === 0 || project.length === 0) {
+      this.setState({
+        chronometers: this.state.chronometers.map(chronometer => {
+          if(chronometer.id === timerId){
+            chronometer.error = true;
+            return chronometer;
+          } else {
+            return chronometer;
+          }
+        })
+      });
+    } else {
+      this.setState({
+        chronometers: this.state.chronometers.map( chronometer => {
+          if (chronometer.id === timerId) {
+            chronometer.title = title;
+            chronometer.project = project;
+            chronometer.fill = true;
+            chronometer.error = false;
+            return chronometer;
+          } else {
+            return chronometer;
+          }
+        })
+      });
+    }
   }
 
-  cancelCreateChronometer(e, timerId) {
+  cancelChronometer(e, timerId) {
     e.preventDefault();
     this.setState({
       chronometers: this.state.chronometers.filter( chronometer =>
@@ -78,21 +96,38 @@ export class Chronometer extends Component {
 
   updateChronometer(e, timerId) {
     e.preventDefault();
-    this.setState({
-      chronometers: this.state.chronometers.map( chronometer => {
-        if (chronometer.id === timerId) {
-          chronometer.title = this.titleRef.current.value;
-          chronometer.project = this.projectRef.current.value;
-          chronometer.edit = false;
-          return chronometer;
-        } else {
-          return chronometer;
-        }
-      })
-    });
+    let title = this.titleRef.current.value;
+    let project = this.projectRef.current.value;
+
+    if (title.length === 0 || project.length === 0) {
+      this.setState({
+        chronometers: this.state.chronometers.map(chronometer => {
+          if(chronometer.id === timerId){
+            chronometer.error = true;
+            return chronometer;
+          } else {
+            return chronometer;
+          }
+        })
+      });
+    } else { 
+      this.setState({
+        chronometers: this.state.chronometers.map( chronometer => {
+          if (chronometer.id === timerId) {
+            chronometer.title = this.titleRef.current.value;
+            chronometer.project = this.projectRef.current.value;
+            chronometer.edit = false;
+            chronometer.error = false;
+            return chronometer;
+          } else {
+            return chronometer;
+          }
+        })
+      });
+    }
   }
 
-  cancelupdate(e, timerId) {
+  cancelUpdate(e, timerId) {
     e.preventDefault();
     this.setState({
       chronometer: this.state.chronometers.map( chronometer => {
@@ -191,8 +226,13 @@ export class Chronometer extends Component {
     return this.state.chronometers.some(chronometer => chronometer.fill === false);
   }
 
+  enableEditChronometerButton(){
+    return this.state.chronometers.some(chronometer => chronometer.edit === true);
+  }
+
   render() {
-    let enableButton = this.enableAddChronometerButton();
+    let enableAddButton = this.enableAddChronometerButton();
+    let enableEditButton = this.enableEditChronometerButton();
     return (
     <Container maxWidth="sm">
       {
@@ -203,7 +243,8 @@ export class Chronometer extends Component {
             key={chronometer.id} 
             title={chronometer.title} 
             project={chronometer.project} 
-            time={chronometer.time} 
+            time={chronometer.time}
+            enable={enableEditButton}
             play={chronometer.play}
             editChronometer={(e) => this.editChronometer(e, chronometer.id)}
             deleteChronometer={(e) => this.deleteChronometer(e, chronometer.id)}
@@ -216,27 +257,29 @@ export class Chronometer extends Component {
             key={chronometer.id}
             title={this.titleRef}
             project={this.projectRef}
+            error={chronometer.error}
             save={(e) => this.saveChronometer(e, chronometer.id)}
-            cancel={(e) => this.cancelCreateChronometer(e, chronometer.id)} 
+            cancel={(e) => this.cancelChronometer(e, chronometer.id)} 
             />
           : chronometer.edit ?
             <ChronometerUpdateView 
             key={chronometer.id}
             title={chronometer.title}
             project={chronometer.project}
+            error={chronometer.error}
             refTitle={this.titleRef}
             refProject={this.projectRef}
             changeTitle={(e) => this.handleChangeTitle(e, chronometer.id)}
             changeProject={(e) => this.handleChangeProject(e, chronometer.id)}
             update={(e) => this.updateChronometer(e, chronometer.id)}
-            cancel={(e) => this.cancelupdate(e, chronometer.id) }
+            cancel={(e) => this.cancelUpdate(e, chronometer.id) }
             />
           : null
           )
         })
       }
       <AddChronometerButton
-      enable={enableButton}
+      enable={enableAddButton}
       handleClick={(e) => this.createChronometer(e)}
       />
     </Container>

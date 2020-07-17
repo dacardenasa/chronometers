@@ -10,6 +10,7 @@ const chronometers = [
     play: false,
     fill: true,
     edit: false,
+    error: false,
   },
   {
     id: 2,
@@ -20,6 +21,7 @@ const chronometers = [
     play: false,
     fill: true,
     edit: false,
+    error: false,
   },
   {
     id: 3,
@@ -30,6 +32,7 @@ const chronometers = [
     play: false,
     fill: true,
     edit: false,
+    error: false,
   },
 ]
 

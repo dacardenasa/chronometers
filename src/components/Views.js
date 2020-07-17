@@ -1,5 +1,5 @@
 import React from 'react';
-import { green } from "@material-ui/core/colors";
+import { grey } from "@material-ui/core/colors";
 import { DeleteForeverOutlined, EditOutlined } from "@material-ui/icons";
 
 export const ChronometerMainView = (props) => {
@@ -14,14 +14,14 @@ export const ChronometerMainView = (props) => {
       </div>
       <div className="actions-box">
         <button onClick={props.deleteChronometer}>
-          <DeleteForeverOutlined style={{ color: green[500] }} />
+          <DeleteForeverOutlined style={{ color: grey[900] }} />
         </button>
-        <button onClick={props.editChronometer}>
-          <EditOutlined style={{ color: green[500] }} />
+        <button onClick={props.editChronometer} disabled={props.enable ? true : false}>
+          <EditOutlined style={{ color: grey[900] }} />
         </button>
       </div>
       {props.play ? 
-        <button className="cancel-button" onClick={props.chronometerStatus}>Stop</button> : 
+        <button className="stop-button" onClick={props.chronometerStatus}>Stop</button> : 
         <button className="start-button" onClick={props.chronometerStatus}>Start</button>
       }
     </div>
@@ -37,14 +37,14 @@ export const ChronometerCreateView = (props) => {
             Title
           </label>
           <br />
-          <input type="text" ref={props.title}/>
+          <input type="text" className={props.error ? "error" : null} ref={props.title}/>
         </div>
         <div className="project-box">
           <label htmlFor="project" className="label-title">
             Project
           </label>
           <br />
-          <input type="text" ref={props.project}/>
+          <input type="text" className={props.error ? "error" : null} ref={props.project}/>
         </div>
         <div className="buttons-box">
           <button type="submit" className="button-one">Create</button>
@@ -64,14 +64,14 @@ export const ChronometerUpdateView = (props) => {
             Title
           </label>
           <br />
-          <input type="text" onChange={props.changeTitle} ref={props.refTitle} value={props.title} />
+          <input type="text" className={props.error ? "error" : null} onChange={props.changeTitle} ref={props.refTitle} value={props.title} />
         </div>
         <div className="project-box">
           <label htmlFor="project" className="label-title">
             Project
           </label>
           <br />
-          <input type="text" onChange={props.changeProject} ref={props.refProject} value={props.project} />
+          <input type="text" className={props.error ? "error" : null} onChange={props.changeProject} ref={props.refProject} value={props.project} />
         </div>
         <div className="buttons-box">
           <button type="submit" className="button-one">Update</button>
