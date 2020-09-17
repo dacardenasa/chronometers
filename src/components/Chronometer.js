@@ -145,14 +145,16 @@ export class Chronometer extends Component {
 
   deleteChronometer(e, timerId) {
     e.preventDefault();
-    let chronometer = this.state.chronometers.find(chronometer => chronometer.id === timerId);
-    let timer = chronometer.timer;
-    timer.stop();
-    this.setState({
-      chronometers: this.state.chronometers.filter( chronometer => 
-        chronometer.id !== timerId
-      )
-    });
+    if (window.confirm("¿Realmente deseas eliminar este cronometro?")) {
+      let chronometer = this.state.chronometers.find(chronometer => chronometer.id === timerId);
+      let timer = chronometer.timer;
+      timer.stop();
+      this.setState({
+        chronometers: this.state.chronometers.filter( chronometer => 
+          chronometer.id !== timerId
+        )
+      });
+    }
   }
 
   startChronometer(e, timerId) {
