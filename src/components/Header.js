@@ -11,4 +11,4 @@ const headerStyles = {
   backgroundColor: 'white',
 }
 
-export const Header = () => { return <h1 style={ headerStyles }>Timers</h1> };
+export const Header = () => { return <h1 style={ headerStyles }>Chronometers App</h1> };
